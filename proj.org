@@ -1,0 +1,57 @@
+#+TITLE: Theo dõi tiến độ dự án data Linter
+#+AUTHOR: Ringo Stark 
+#+DATE: \today
+#+COMMENT: tôi sẽ thử nghiệm ở đây, cách ghi chép thời gian và các nhiệm vụ phải làm một dự án, cụ thể là dự án data linter, hiện tại [2024-10-27 Sun 19:48] đã làm được một nửa dự án rồi, nhưng nó vẫn còn nhiều chức năng cần phải hoàn thiện và các thông báo lỗi cần phải vượt qua một cách trơ tru
+
+#+SETUPFILE: "./assets/latex/report-main.org"
+
+# Macro section
+#+SETUPFILE: "./assets/latex/common-macro.org"
+
+#+DESCRIPTION: 
+#+KEYWORDS: 
+#+LANGUAGE: vi
+
+#+EXCLUDE_TAGS: noexport
+
+* TODO Hoàn thiện chức năng replace sau khi match pattern
+:PROPERTIES:
+:CREATED: [2024-10-27 Sun 19:49]
+:END:
+
+
+* TODO Thiết kế hệ thống thông báo lỗi của data linter
+:PROPERTIES:
+:CREATED: [2024-10-27 Sun 19:48]
+:END:
+
+** TODO Suy nghĩ về chức năng báo lỗi của data linter
+:PROPERTIES:
+:CREATED: [2024-10-27 Sun 19:50]
+:END:
+
+Data linter là một thư viện sâu bên dưới các hành động của tôi. Nó trong tương lai sẽ là một thư viện nền tảng, nên nhất thiết, nó phải thông báo lỗi càng ít càng tốt. Không nên thể hiện lỗi ở cấp thấp như thế này.
+
+Nó nên như là một động cơ, hoạt động trơn tru trong mọi tình huống nó gặp phải. Mà muốn được như vậy, thì tất cả các tình huống mà nó gặp phải được tiên liệu đến. Điều này dẫn đến thư viện này trở thành một máy hữu hạn trạng thái.
+
+Data linter nên có các giá trị mặc định thay thế cho lỗi, ví dụ như số 0 cho giá trị số hoặc chuỗi rỗng cho kết quả không match được. Nhưng điều này cũng sẽ phát sinh các tình huống không lường trước do các giá trị đó một lần nữa lại được gán cho các hàm số khác. Vì vậy, nhất thiết phải suy nghĩ và thiết kế rất kĩ các giá trị khi lỗi này.
+
+* IDEA Các phương pháp triển khai công cụ data linter
+:PROPERTIES:
+:CREATED: [2024-10-15 Tue 13:26]
+:END:
+
+Việc lập trình được là một chuyện, triển khai nó để thực hiện tốt trong cuộc sống hàng ngày là chuyện khác. Vì vậy, đây là các ý tưởng để triển khai data linter ở mọi tình huống
+- Tạo một command line, có thể thông qua google zx, nhận đầu vào là một file js config, để khai báo các miền và ràng buộc, sau đó chạy qua một đoạn text
+- Một lệnh trong hypersnippet tổng quát, để chạy nó bên trong trình soạn thảo vscode.
+- Một extension của emacs. (cái này hơi tham vọng, nhưng vẫn có thể, liệu emacs có chấp nhận mã lệnh js, hay phải viết lại bằng elisp)
+
+* IDEA Các ý tưởng về template trong data linter
+:PROPERTIES:
+:CREATED: [2024-10-15 Tue 13:24]
+:END:
+
+Mục tiêu của data linter là giúp cho việc nhập dữ liệu được thuận tiện hơn. Vì vậy nó phải tốt nhất có thể.
+
+Sau đây là một vài ý tưởng
+- Nhận dạng miền và tự động chỉnh sửa theo list cho sẵn. Có một số miền data

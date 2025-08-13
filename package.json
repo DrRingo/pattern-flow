@@ -1,0 +1,15 @@
+{
+    "name": "pattern-flow",
+    "version": "1.0.0",
+    "description": "Một công cụ linh hoạt, dựa trên cấu hình để trích xuất, xử lý và định dạng dữ liệu từ văn bản thô.",
+    "author": "Your Name",
+    "license": "MIT",
+    "main": "index.js",
+    "bin": {
+        "pattern-flow": "cli.js"
+    },
+    "type": "module",
+    "dependencies": {
+        "string-similarity": "^4.0.4"
+    }
+}

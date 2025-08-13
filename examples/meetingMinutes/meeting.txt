@@ -1,0 +1,12 @@
+Meeting: Project Phoenix Kick-off
+Date: 2024-05-21
+Attendees: @alice, @bob, @charlie, @david
+
+## Decisions
+- We will use PatternFlow for our new parsing engine. (DECISION)
+
+## Action Items
+- @bob to set up the new repository. (AI due:2024-05-28)
+- @alice to draft the initial README file.
+- @charlie to investigate deployment options. (AI due:2024-06-04)
+- @alice to create a sample log parser config. (AI due:2024-05-30)

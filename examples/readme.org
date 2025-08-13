@@ -1,0 +1,24 @@
+#+TITLE: ghi chú về templates 
+#+AUTHOR: Ringo Stark 
+#+DATE: \today
+#+COMMENT: 
+
+#+SETUPFILE: "./assets/latex/report-main.org"
+
+# Macro section
+#+SETUPFILE: "./assets/latex/common-macro.org"
+
+#+DESCRIPTION: 
+#+KEYWORDS: 
+#+LANGUAGE: vi
+
+#+EXCLUDE_TAGS: noexport
+
+* Phân loại template 
+:PROPERTIES:
+:CREATED: [2024-10-15 Tue 13:35]
+:END:
+
+Có 2 loại template
+- =Linter=: là các config của hàm ~lintToPattern~. Các =linter= được lưu trong thư mục =linter= để sử dụng chung, bởi vì có chúng có thể sử dụng lặp lại với nhau.
+- =dataLinter=: là các config chung, nó bao gồm nhiều =linter= kết hợp với nhau 

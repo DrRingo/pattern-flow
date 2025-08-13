@@ -1,0 +1,135 @@
+#+TITLE: Hướng dẫn sử dụng chương trình data Linter 
+#+AUTHOR: Ringo Stark
+#+DATE: [2024-10-15 Tue 08:24] 
+#+COMMENT: 
+
+#+SETUPFILE: "../../assets/latex/report-main.org"
+
+# Macro section
+#+SETUPFILE: "../../assets/latex/common-macro.org"
+
+#+DESCRIPTION: 
+#+KEYWORDS: 
+#+LANGUAGE: vi
+
+#+EXCLUDE_TAGS: noexport
+
+* Mục đích
+:PROPERTIES:
+:CREATED: [2024-10-15 Tue 08:24]
+:END:
+
+* Ví dụ
+:PROPERTIES:
+:CREATED: [2024-10-15 Tue 08:24]
+:END:
+
+* Quy trình xử lý dữ liệu trong dataLinter
+Mục tiêu:
+- Cái tôi muốn là quên đi thư viện này. Sau này tôi chỉ cần nhớ khi cần lấy ra một đoạn dữ liệu nào bằng latex, tôi đã có một thư viện hỗ trợ nó một cách có hệ thống
+- Thư viện này nên hoàn thiện trong chức năng được quy dịnh của nó, nó đủ đơn giản để viết hoàn thiện. Các nhu cầu mới phát sinh có thể giải quyết bằng các công cụ khác.
+- Đối với một thư viện cần làm. Tôi chỉ cần có các nhiệm vụ sau đây, các chi tiết khác là của thư viện:
+  + Suy nghĩ nên bắt nội dung cần lấy bằng =regex= nào
+  + Bắt một nội dung hay nhiều nội dung khác nhau trong cùng một câu (câu ở đây là đơn vị của text, có thể hiểu như câu bình thường, hoặc đoạn, hoặc cả file text,...)
+  + Mỗi nội dung này bắt một lần duy nhất hay bắt nhiều lần.
+  + Xử lý sau khi bắt như thế nào, để cho ra dạng thống nhất. (thông dụng nhất là dạng text đã định dạng sẵn, hoặc JSON để pass qua các hàm khác hoặc trả về JSON luôn)
+  + Cuối cùng tôi muốn xuất ra dạng text tổng hết sau khi thực hiện các việc bắt =regex= này như thế nào.
+    - Thay thế text đã bắt bằng một loại khác
+    - Chỉ lấy text đã bắt và tổng hợp chúng thành một định dạng theo template
+    - Xuất dạng JSON để làm đầu vào cho các hàm khác. JSON này cũng có schema thống nhất để chuẩn hóa.
+#+BEGIN_SRC plantuml :file assets/img/process.svg
+@startuml
+agent ringo
+agent stark
+@enduml
+#+END_SRC
+
+* Hướng dẫn viết config cho từng loại dữ liệu 
+:PROPERTIES:
+:CREATED: [2024-10-15 Tue 08:24]
+:END:
+
+Sau đây là một mẫu dữ liệu tiêu chuẩn
+
+#+BEGIN_SRC json 
+{
+  nameOfLinter: "date and hour linter",
+  comment: "Ghi chú ở đây về tính năng và cách hoạt động của config linter này",
+
+  // matchMode toàn cục, là dạng mặc định nếu các regexPatterns không khai báo khác đi
+  matchMode: "single",
+  regexPatterns: [
+    {
+      // Tên của regex pattern, bắt buộc phải có, để tra cứu trong matchObject
+      name: "emailReg",
+
+      // matchMode riêng cho regex pattern này, tuỳ chọn
+      matchMode: "multi",
+
+      // Bắt buộc, có dạng regex, không phải dạng string
+      matchPattern: /@(?<email>\w+)/,
+
+      // defaultMatchValue là kết quả trả về nếu không match được,
+      defaultMatchValue: "",
+
+      // Bắt buộc, là một hàm bên trong đối tượng JSON, được gọi ra bằng key localPostProcessingFunction, luôn luôn lấy thisMatch làm tham số.
+      // Đối tượng thisMatch là một JSON chứa tất cả các key là namegroup của regex ở trên và value là giá trị match được.
+      // key đặc biệt trong thisMatch: index: vị trí đầu tiên match được, match: toàn bộ chuỗi match được, input: chuỗi ban đầu
+      localPostProcessingFunction: (thisMatch) => { return applyPattern("Thoi khong {{thisMatch.match}}", thisMatch) }
+    },
+    {
+      name: "hourLinter",
+      matchMode: "multi",
+      defaultMatchValue: "0100",
+      matchPattern: /h(?<hour>\d{1,2})(?<minutes>\d{1,2})/,
+      localPostProcessingFunction: (thisMatch) => { return thisMatch.hour }
+    }
+  ],
+
+  // Bắt buộc, lấy matchObject làm tham số, tham khảo cấu trúc của matchObject ở \cref{matchobject} [[#matchobject][các phần sau]]
+  globalPostProcessingFunction: id
+}
+#+END_SRC
+
+** Hướng dẫn viết localPostProcessingFunction, dành cho từng môi trường regex pattern
+:PROPERTIES:
+:CREATED: [2024-10-15 Tue 08:28]
+:END:
+
+** Hướng dẫn viết globalPostProcessingFunction
+:PROPERTIES:
+:CREATED: [2024-10-15 Tue 08:28]
+:END:
+
+*** Mục đích của globalPostProcessingFunction, và các ví dụ 
+:PROPERTIES:
+:CREATED: [2024-10-15 Tue 08:29]
+:END:
+
+Ví dụ: 
+- Dựa vào các dữ liệu đã match, gởi email cho địa chỉ email đã match được và với nội dung. Có thể match thêm các miền khác của một email thông thường, như: bcc, cc, subject...
+- Lấy dữ liệu đã match, thêm vào một row trong sheet dữ liệu đã định nghĩa từ trước.
+
+*** Cấu trúc dữ liệu của matchObject 
+:PROPERTIES:
+:CREATED: [2024-10-15 Tue 08:27]
+:CUSTOM_ID: matchobject
+:END:
+
+matchObject là 
+
+** Các hàm utility trong việc viết localPostProcessingFunction và globalPostProcessingFunction
+:PROPERTIES:
+:CREATED: [2024-10-15 Tue 08:33]
+:END:
+
+*** Hàm apply pattern 
+:PROPERTIES:
+:CREATED: [2024-10-15 Tue 08:33]
+:END:
+
+*** Hàm id
+:PROPERTIES:
+:CREATED: [2024-10-15 Tue 08:33]
+:END:
+
