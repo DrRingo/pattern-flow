@@ -268,7 +268,8 @@ export default function extractorToPattern(textToExtract, config, errors = []) {
           matchObject[patternConfig.name] = allMatches;
 
           // Thay thế tất cả các kết quả khớp trong văn bản.
-          const multiReplaceRegex = new RegExp(patternConfig.matchPattern, 'g');
+          const matchPatternObj = patternConfig.matchPattern instanceof RegExp ? patternConfig.matchPattern : new RegExp(patternConfig.matchPattern);
+          const multiReplaceRegex = new RegExp(matchPatternObj.source, (matchPatternObj.flags || '').replace('g', '') + 'g');
           mainText = mainText.replace(multiReplaceRegex, defaultSeparator);
           break;
         default:
@@ -318,7 +319,7 @@ export default function extractorToPattern(textToExtract, config, errors = []) {
         }
 
         // Khai báo lại các giá trị đã match trong groups của từng match, để sử dụng cho hàm localPostProcessingFunction
-        Object.entries(currentItem.groups).forEach(([key, value]) => {
+        Object.entries(currentItem.groups || {}).forEach(([key, value]) => {
           thisMatch[key] = value;
         });
         // ---- Xử lý xong đối tượng tạm thời thisMatch

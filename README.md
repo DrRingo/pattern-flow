@@ -32,13 +32,82 @@ Thay vì phải viết một script mới cho mỗi tác vụ, **PatternFlow** c
 
 ## Cài đặt
 
-Dự án này sử dụng Node.js và có thể được cài đặt qua NPM.
+PatternFlow hiện được phân phối qua **NPM** và có thể hoạt động như một công cụ dòng lệnh (CLI) độc lập hoặc một thư viện JavaScript.
+
+### 1. Cài đặt làm Công cụ Dòng lệnh (CLI Tool)
+
+Bạn có thể cài đặt toàn cục qua NPM để có thể gọi lệnh `pattern-flow` ở bất cứ đâu trên hệ thống máy tính của bạn:
 
 ```bash
-npm install string-similarity
+npm install -g pattern-flow
+```
+*(Nếu bạn không muốn cài đặt, bạn có thể gọi dùng một lần thông qua `npx pattern-flow`)*
+
+**Dành cho người dùng Homebrew / Scoop (Giải pháp Standalone):**
+Dự án đã đóng gói binary độc lập và cung cấp phương thức cài đặt trực tiếp thông qua URL kho lưu trữ cấu hình, không phụ thuộc hệ sinh thái Node.js. 
+
+Để cài đặt qua Homebrew (macOS / Linux):
+```bash
+brew install https://raw.githubusercontent.com/DrRingo/pattern-flow/main/packaging/pattern-flow.rb
 ```
 
-_Lưu ý: Hiện tại dự án chưa được đóng gói lên NPM. Bạn có thể clone repository và sử dụng trực tiếp các module._
+Để cài đặt qua Scoop (Windows):
+```bash
+scoop install https://raw.githubusercontent.com/DrRingo/pattern-flow/main/packaging/pattern-flow.json
+```
+
+### 2. Cài đặt làm Thư viện dự án (JS Library)
+
+Nếu bạn muốn nhúng Engine của PatternFlow trực tiếp vào script Node.js của mình:
+
+```bash
+npm install pattern-flow
+```
+
+---
+
+## Phân Tách Cách Sử Dụng
+
+### Phương pháp 1: Dùng Môi Trường Dòng Lệnh (CLI)
+
+Cú pháp lệnh tiêu chuẩn:
+```bash
+pattern-flow <đường_dẫn_config_js> <đường_dẫn_file_văn_bản>
+```
+
+**Ví dụ thực tế:**
+Bạn có 1 file cấu hình `orgmodeTOC.js` và file văn bản `content.org` cùng thư mục. Chạy:
+```bash
+pattern-flow ./orgmodeTOC.js ./content.org
+```
+=> Kết quả trích xuất xử lý sẽ in trực tiếp lên Console Terminal để bạn dễ dàng pipe sang công cụ thác (ví dụ: `> result.json`).
+*Lưu ý: CLI có cơ chế tự bắt lỗi mạnh mẽ, nó sẽ chủ động gắt thông báo đỏ nếu bạn lỡ truyền nhầm Folder thay vì File hay thiếu quyền đọc cấu hình.*
+
+### Phương pháp 2: Nhúng Vào Lập Trình Dự Án (JS Library)
+
+Sau khi cài đặt gói qua npm, ở file `app.js` của bạn, Import các engine cốt lõi:
+
+```javascript
+import fs from 'fs';
+import { extractorToPattern, applyPattern, textSplitter } from 'pattern-flow';
+// Hoặc đi sâu vào: import extractorToPattern from 'pattern-flow/modules/extractor.js';
+
+// Tải một Cấu Hình Mẫu Config Object (như định dạng ở phần dưới)
+import myConfig from './myPatternConfig.js'; 
+
+const textToParse = fs.readFileSync('data.txt', 'utf-8');
+
+// Bơm text vào Engine
+const extractedData = extractorToPattern(textToParse, myConfig);
+console.log(extractedData);
+```
+
+Hệ thống ESM Library sẽ xuất khẩu (Export) toàn bộ các Module như định dạng sau:
+- `extractorToPattern` (Default từ /modules/extractor.js)
+- `applyPattern` (Default từ /modules/applyPattern.js)
+- `textSplitter` (Default từ /modules/textSplliter.js)
+
+---
 
 ## Cách hoạt động
 

@@ -1,0 +1,60 @@
+@startuml
+title Extractor Pattern Flow
+
+start
+
+:Input: textToExtract, config;
+:Initialize mainText = textToExtract;
+:Merge config with defaults;
+:Initialize matchObject = {};
+
+partition "Loop through regexPatterns" {
+    while (For each patternConfig in regexPatterns) is (has more)
+        :Initialize matchObject[patternConfig.name] = [];
+        :Find all matches (matchAllToJSON);
+        
+        if (Matches found?) then (yes)
+            :Mark all matches as matched = true;
+            if (matchMode == 'single') then (yes)
+                :Take first match;
+                :Replace first occurrence in mainText with separator;
+            else (multi)
+                :Take all matches;
+                :Replace all occurrences in mainText with separator;
+            endif
+        else (no)
+            :Add default match object (matched = false);
+        endif
+
+        partition "Local Processing" {
+            while (For each match in matchObject[patternConfig.name]) is (has more)
+                if (match.matched?) then (yes)
+                    :Create thisMatch object;
+                    
+                    if (Has subPatterns?) then (yes)
+                        :Recursive Call: extractorToPattern(content, subConfig);
+                        :Assign result to currentItem.children;
+                    endif
+                    
+                    :Apply localPostProcessingFunction(thisMatch);
+                    :Set postProcessValue;
+                else (no)
+                    :Set postProcessValue = null;
+                endif
+            endwhile
+        }
+    endwhile
+}
+
+partition "Global Processing" {
+    if (globalPostProcessingFunction exists?) then (yes)
+        :finalResult = globalPostProcessingFunction(matchObject);
+    else (no)
+        :finalResult = {};
+    endif
+}
+
+:Return finalResult;
+
+stop
+@enduml

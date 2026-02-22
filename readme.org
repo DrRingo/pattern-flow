@@ -133,3 +133,10 @@ matchObject là
 :CREATED: [2024-10-15 Tue 08:33]
 :END:
 
+* ý tưởng tiếp theo [2025-11-27 Wed 15:23]
+- pattern flow chỉ nên lọc pattern thôi, không nên match fuzzy
+- việc match fuzzy sẽ là chức năng của một lệnh khác
+- pattern flow nên có khả năng xuất qua json, với các key là mục đã match, các json này có thể lồng nhau dạng cấu trúc
+- pass json này qua match fuzzy sẽ được match fuzzy, tức là hàm match fuzzy kia sẽ có chức năng nhận file json và một file cấu hình riêng
+- Liệu có thể thay chức năng fuzzy match bằng một kĩ thuật cao cấp hơn trong machine learning như mạng Hopfield hay không.
+- Hàm apply pattern cũng nên là một lệnh riêng, dạng apply template dạng nunjucks, nếu nó quá đơn giản thì mới làm một tuỳ chọn riêng cho pattern flow

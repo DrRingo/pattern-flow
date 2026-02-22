@@ -9,6 +9,15 @@
         "pattern-flow": "cli.js"
     },
     "type": "module",
+    "exports": {
+        ".": "./index.js",
+        "./modules/*": "./modules/*"
+    },
+    "files": [
+        "index.js",
+        "cli.js",
+        "modules"
+    ],
     "dependencies": {
         "string-similarity": "^4.0.4"
     }

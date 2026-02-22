@@ -1,0 +1,14 @@
+{
+  "version": "1.0.0",
+  "description": "Một công cụ linh hoạt, dựa trên cấu hình để trích xuất, xử lý và định dạng dữ liệu từ văn bản thô.",
+  "homepage": "https://github.com/DrRingo/pattern-flow",
+  "license": "MIT",
+  "architecture": {
+    "64bit": {
+      "url": "https://github.com/DrRingo/pattern-flow/releases/download/v1.0.0/pattern-flow.exe",
+      "bin": "pattern-flow.exe",
+      "hash": "2ff01f7039f2d5f1b970e5ef85185bcf6c357ab777c589c4661c7f5518b4c3df"
+    }
+  },
+  "checkver": "^v([\\d.]+)"
+}

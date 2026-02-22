@@ -44,7 +44,20 @@ async function main() {
         console.error(`Lỗi: Không tìm thấy tệp đầu vào tại '${absoluteInputPath}'`);
         process.exit(1);
     }
-    const inputText = fs.readFileSync(absoluteInputPath, 'utf-8');
+
+    if (fs.statSync(absoluteInputPath).isDirectory()) {
+        console.error(`Lỗi: Đường dẫn đầu vào '${absoluteInputPath}' là một thư mục. Vui lòng cung cấp một tệp tin.`);
+        process.exit(1);
+    }
+
+    let inputText;
+    try {
+        inputText = fs.readFileSync(absoluteInputPath, 'utf-8');
+    } catch (error) {
+        console.error(`Lỗi khi đọc tệp đầu vào '${absoluteInputPath}':`);
+        console.error(error.message);
+        process.exit(1);
+    }
 
     // --- Chạy engine và in kết quả ---
     try {

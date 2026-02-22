@@ -25,12 +25,11 @@ export default function textSplliter(text, pattern, mode = 'normal', omitLastLin
         if (endMatch) {
           let extractedText = text.slice(match.index, endMatch.index + endMatch[0].length);
           if (omitLastLine) {
-            const lines = extractedText.split('\n');
-            lines.pop();
-            extractedText = lines.join('\n');
+            extractedText = extractedText.replace(/\r?\n[^\n]*$/, '');
           }
           matches.push(extractedText);
           lastIndex = endRegex.lastIndex;
+          beginRegex.lastIndex = lastIndex;
         } else {
           matches.push(text.slice(match.index));
           break;

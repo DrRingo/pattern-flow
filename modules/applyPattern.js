@@ -23,7 +23,8 @@
 export function numberedPlaceholderRender(pattern, data) {
   const values = Object.values(data);
   return pattern.replace(/\$(\d+)/g, (match, groupName) => {
-    return values[groupName - 1].toString() || match;
+    const val = values[groupName - 1];
+    return (val !== undefined && val !== null) ? val.toString() : match;
   });
 };
 
