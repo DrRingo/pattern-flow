@@ -47,8 +47,10 @@ npm install -g pattern-flow
 Dự án đã đóng gói binary độc lập và cung cấp phương thức cài đặt trực tiếp thông qua URL kho lưu trữ cấu hình, không phụ thuộc hệ sinh thái Node.js. 
 
 Để cài đặt qua Homebrew (macOS / Linux):
+Vì Homebrew gần đây đã giới hạn bảo mật việc cài trực tiếp qua URL, bạn chỉ cần tải Script cài đặt về máy rồi gọi Brew chạy nó:
 ```bash
-brew install https://raw.githubusercontent.com/DrRingo/pattern-flow/main/packaging/pattern-flow.rb
+curl -O https://raw.githubusercontent.com/DrRingo/pattern-flow/main/packaging/pattern-flow.rb
+brew install ./pattern-flow.rb
 ```
 
 Để cài đặt qua Scoop (Windows):
